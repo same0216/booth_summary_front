@@ -1,8 +1,9 @@
 "use client"
 
 import axios from "axios";
-import { Flex, Heading, Input, Button, Center, FormControl, FormErrorMessage } from "@chakra-ui/react";
+import { Flex, Heading, Input, Button, Center, FormControl, FormErrorMessage, useToast } from "@chakra-ui/react";
 import { useForm } from "react-hook-form";
+import { useRouter } from "next/navigation";
 
 
 export default function Register() {
@@ -12,6 +13,9 @@ export default function Register() {
     formState: { errors, isSubmitting }
   } = useForm()
 
+  const route = useRouter();
+  const toast = useToast();
+
   const onsubmit = async (data) => {
     await axios({
       method: "post",
@@ -19,13 +23,19 @@ export default function Register() {
       data: {username: data.user, password: data.password}
     })
 
-    .then((result => {
-      console.log("成功", result);
-    }))
+    .then(() => {
+      route.push("./login")
+      toast({
+        title: "新規登録に成功しました。",
+        status: "success",
+        isClosable: true,
+        position: "top-right"
+      })
+    })
     
-    .catch((error => {
-      console.log("失敗", error);
-    }))
+    .catch(() => {
+      console.log('失敗');
+    })
   } 
 
   return(
