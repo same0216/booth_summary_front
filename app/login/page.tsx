@@ -21,7 +21,7 @@ export default function Register() {
 
     await axios({
       method: "post",
-      url: "https://5573.me/users/login",
+      url: "https://api.5573.me/users/login",
       data: {username: data.user, password: data.password}
     })
 

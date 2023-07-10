@@ -19,7 +19,7 @@ export default function Register() {
   const onsubmit = async (data) => {
     await axios({
       method: "post",
-      url: "https://5573.me/users/register",
+      url: "https://api.5573.me/users/register",
       data: {username: data.user, password: data.password}
     })
 
