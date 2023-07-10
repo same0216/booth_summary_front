@@ -13,8 +13,24 @@ import {
   BarElement,
   Title,
   Tooltip,
-  Legend
+  Legend,
+  ChartOptions
 } from "chart.js";
+
+interface Item {
+  img: string;
+  name: string;
+  likes: number;
+  shop_name: string;
+  url: string;
+}
+
+interface ChartItem {
+  date: string,
+  count: number,
+}
+
+
 
 ChartJS.register(
   CategoryScale,
@@ -30,12 +46,12 @@ export default function Dashboard() {
   const route = useRouter();
   const token = cookies.token;
   const toast = useToast();
-  const [item, setItem] = useState([]);
+  const [item, setItem] = useState<Item[]>([]);
   const [charts, setChart] = useState([]);
   const labels:string[] = [];
   const data1:number[] = [];
 
-  const options = {
+  const options: ChartOptions = {
     responsive: true,
     plugins: {
       legend: {
@@ -43,7 +59,7 @@ export default function Dashboard() {
       },
     }
   };
-  charts.forEach((item) => {
+  charts.forEach((item: ChartItem) => {
     labels.push(item.date);
     data1.push(item.count);
   })

@@ -4,20 +4,25 @@ import axios from "axios";
 import React from "react";
 import { Flex, Heading, Input, Button, Center, FormControl, FormErrorMessage, Toast, useToast } from "@chakra-ui/react";
 import { setCookie } from "nookies";
-import { useForm } from "react-hook-form";
+import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { useRouter } from "next/navigation";
+
+type formInputs = {
+  user: string;
+  password: string;
+}
 
 export default function Register() {
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting }
-  } = useForm()
+  } = useForm<formInputs>()
 
   const router = useRouter();
   const toast = useToast();
 
-  const onsubmit = async (data) => {
+  const onsubmit: SubmitHandler<FieldValues> = async (data) => {
 
     await axios({
       method: "post",
@@ -50,7 +55,7 @@ export default function Register() {
       <Flex direction="column" background="gray.100" p={12} rounded={6}>
         <Heading mb={6} textAlign="center">ログイン</Heading>
           <form onSubmit={handleSubmit(onsubmit)}>
-            <FormControl isInvalid={errors.user}>
+            <FormControl isInvalid={Boolean(errors.user)}>
               <Input 
                 id="user" 
                 placeholder="ユーザーID" 
@@ -65,7 +70,7 @@ export default function Register() {
                 {errors.user && errors.user.message}
               </FormErrorMessage>
             </FormControl>
-            <FormControl isInvalid={errors.password}>
+            <FormControl isInvalid={Boolean(errors.password)}>
               <Input 
                 id="password"
                 placeholder="パスワード"
