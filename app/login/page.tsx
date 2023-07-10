@@ -2,10 +2,11 @@
 
 import axios from "axios";
 import React from "react";
-import { Flex, Heading, Input, Button, Center, FormControl, FormErrorMessage, Toast, useToast } from "@chakra-ui/react";
+import { Flex, Heading, Input, Button, Center, FormControl, FormErrorMessage, useToast, Text } from "@chakra-ui/react";
 import { setCookie } from "nookies";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 type formInputs = {
   user: string;
@@ -51,7 +52,7 @@ export default function Register() {
   } 
 
   return(
-    <Flex height="100vh" alignItems="center" justifyContent="center">
+    <Flex direction="column" height="100vh" alignItems="center" justifyContent="center">
       <Flex direction="column" background="gray.100" p={12} rounded={6}>
         <Heading mb={6} textAlign="center">ログイン</Heading>
           <form onSubmit={handleSubmit(onsubmit)}>
@@ -89,8 +90,8 @@ export default function Register() {
               <Button mt={6} colorScheme="teal" isLoading={isSubmitting} type="submit">送信</Button>
             </Center>
           </form>
-          
       </Flex>
+      <Text>新規登録は<Link color="blue.500" href="./register">こちら</Link>から</Text>
     </Flex>
   );
 }

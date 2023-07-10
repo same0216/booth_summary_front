@@ -1,7 +1,6 @@
 "use client"
 
 import axios from "axios";
-import { ReactNode } from "react";
 import { Flex, Heading, Input, Button, Center, FormControl, FormErrorMessage, useToast } from "@chakra-ui/react";
 import { useForm,  SubmitHandler, FieldValues  } from "react-hook-form";
 import { useRouter } from "next/navigation";
@@ -45,7 +44,7 @@ export default function Register() {
   } 
 
   return(
-    <Flex height="100vh" alignItems="center" justifyContent="center">
+    <Flex direction="column" height="100vh" alignItems="center" justifyContent="center">
       <Flex direction="column" background="gray.100" p={12} rounded={6}>
         <Heading mb={6} textAlign="center">新規登録</Heading>
           <form onSubmit={handleSubmit(onsubmit)}>
@@ -88,7 +87,6 @@ export default function Register() {
               <Button mt={6} colorScheme="teal" isLoading={isSubmitting} type="submit">送信</Button>
             </Center>
           </form>
-          
       </Flex>
     </Flex>
   );
