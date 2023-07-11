@@ -25,11 +25,11 @@ export default function Login() {
   const toast = useToast();
   const cookies = parseCookies();
 
-  useEffect(()=> {
-    if (Object.keys(cookies).length !== 0) {
-      return route.push('/dashboard');
-    }
-  },[]);
+  // useEffect(()=> {
+  //   if (Object.keys(cookies).length !== 0) {
+  //     return route.push('/dashboard');
+  //   }
+  // },[]);
 
   const onsubmit: SubmitHandler<FieldValues> = async (data) => {
 
