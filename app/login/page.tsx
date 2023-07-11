@@ -25,11 +25,12 @@ export default function Login() {
   const toast = useToast();
   const cookies = parseCookies();
 
-  // useEffect(()=> {
-  //   if (Object.keys(cookies).length !== 0) {
-  //     return route.push('/dashboard');
-  //   }
-  // },[]);
+  useEffect(()=> {
+    console.log(cookies);
+    if (cookies.auth === "true") {
+      return route.push('/dashboard');
+    }
+  },[]);
 
   const onsubmit: SubmitHandler<FieldValues> = async (data) => {
 
@@ -41,6 +42,10 @@ export default function Login() {
 
     .then((result => {
       setCookie(null, "token", result.data.token, {
+        maxAge: 30 * 24 * 60 * 60,
+        path: '/',
+      })
+      setCookie(null, "auth", "true", {
         maxAge: 30 * 24 * 60 * 60,
         path: '/',
       })
