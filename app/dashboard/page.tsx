@@ -59,11 +59,11 @@ export default function Dashboard() {
       },
     }
   };
+
   charts.forEach((item: ChartItem) => {
     labels.push(item.date);
     data1.push(item.count);
   })
-
 
   const chart = {
     labels,
@@ -117,8 +117,9 @@ export default function Dashboard() {
           direction={{ base: 'column', sm: 'row' }}
           overflow='hidden'
           variant='outline'
-          width='4xl'
           shadow='lg'
+          width='100%'
+          maxWidth='900px'
           my={5}
           transition="transform 0.2s ease-in-out"
           _hover={{transform: "translateY(-5px)"}}
@@ -129,7 +130,6 @@ export default function Dashboard() {
             position="absolute"
             top="2"
             right="2"
-            zIndex="1"
           />
           )}
           {index === 1 && (
@@ -138,7 +138,6 @@ export default function Dashboard() {
               position="absolute"
               top="2"
               right="2"
-              zIndex="1"
             />
           )}
           {index === 2 && (
@@ -147,7 +146,6 @@ export default function Dashboard() {
               position="absolute"
               top="2"
               right="2"
-              zIndex="1"
             />
           )}
           <Image
@@ -172,7 +170,7 @@ export default function Dashboard() {
         </Card>
       ))}
       <Text fontSize="3xl" fontWeight="bold" my="5">過去8日分の出品数チャート</Text>
-      <Box width="900px" border="1px" borderColor="gray.200" shadow="lg" rounded="lg" my={5}>
+      <Box width="100%" height="450px" maxWidth="900px" position="relative" border="1px" borderColor="gray.200" shadow="lg" rounded="lg" my={5}>
         <Bar options={options} data={chart}/>
       </Box>
     </Flex>

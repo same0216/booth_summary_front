@@ -10,7 +10,6 @@ type formInputs = {
   password: string;
 }
 
-
 export default function Register() {
   const {
     handleSubmit,

@@ -1,27 +1,35 @@
 "use client"
 
 import axios from "axios";
-import React from "react";
+import Link from "next/link";
 import { Flex, Heading, Input, Button, Center, FormControl, FormErrorMessage, useToast, Text } from "@chakra-ui/react";
-import { setCookie } from "nookies";
+import { setCookie, parseCookies } from "nookies";
 import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
+import { useEffect } from "react";
+
 
 type formInputs = {
   user: string;
   password: string;
 }
 
-export default function Register() {
+export default function Login() {
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting }
   } = useForm<formInputs>()
 
-  const router = useRouter();
+  const route = useRouter();
   const toast = useToast();
+  const cookies = parseCookies();
+
+  useEffect(()=> {
+    if (Object.keys(cookies).length !== 0) {
+      return route.push('/dashboard');
+    }
+  },[]);
 
   const onsubmit: SubmitHandler<FieldValues> = async (data) => {
 
@@ -37,11 +45,11 @@ export default function Register() {
         path: '/',
       })
 
-      router.push('/dashboard');
+      route.push('/dashboard');
     }))
     
     .catch(() => {
-       router.push('/login');
+       route.push('/login');
        toast({
         title: "ユーザーIDまたはパスワードが間違っています。",
         status: "error",
