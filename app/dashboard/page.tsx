@@ -79,7 +79,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (Object.keys(cookies).length === 0) {
-      setCookie(null, "auth", "false")
       return route.push('/login');
     } 
     const fetchData = async () => {
@@ -98,6 +97,7 @@ export default function Dashboard() {
         setChart(chart.data);
         setLoading(false);
       } catch (error) {
+        setCookie(null, "auth", "false");
         route.push("/login");
         toast({
           title: "セッションが切れています、再度ログインしてください",
