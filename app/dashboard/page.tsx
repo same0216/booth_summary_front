@@ -2,8 +2,8 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { parseCookies, setCookie } from "nookies";
-import { Flex, Card, CardBody, Heading, Text, Image, Stack, useToast, Link, Box} from "@chakra-ui/react";
+import { parseCookies, destroyCookie } from "nookies";
+import { Flex, Card, CardBody, Heading, Text, Image, Stack, useToast, Link, Box, Spinner} from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { Bar } from 'react-chartjs-2';
 import {
@@ -48,6 +48,7 @@ export default function Dashboard() {
   const toast = useToast();
   const [item, setItem] = useState<Item[]>([]);
   const [charts, setChart] = useState([]);
+  const [loading, setLoading] = useState(true);
   const labels:string[] = [];
   const data1:number[] = [];
 
@@ -94,11 +95,9 @@ export default function Dashboard() {
         });
         setItem(itemList.data);
         setChart(chart.data);
+        setLoading(false);
       } catch (error) {
-        setCookie(null, "auth", "false", {
-          maxAge: 30 * 24 * 60 * 60,
-          path: '/',
-        })
+        destroyCookie(null, "token")
         route.push("/login");
         toast({
           title: "セッションが切れています、再度ログインしてください",
@@ -113,70 +112,78 @@ export default function Dashboard() {
   }, []);
 
   return(
-    <Flex alignItems="center" justifyContent="center" flexDirection="column">
-      <Text fontSize="3xl" fontWeight="bold" my="5">過去１週間のいいねランキング</Text>
-      {item.map((item, index) => (
-        <Card
-          key={index}
-          direction={{ base: 'column', sm: 'row' }}
-          overflow='hidden'
-          variant='outline'
-          shadow='lg'
-          width='100%'
-          maxWidth='900px'
-          my={5}
-          transition="transform 0.2s ease-in-out"
-          _hover={{transform: "translateY(-5px)"}}
-        >
-          {index === 0 && (
-          <Image
-            src="/images/1st.png"
-            position="absolute"
-            top="2"
-            right="2"
-          />
-          )}
-          {index === 1 && (
+    <>
+      {loading ? 
+      <Flex minWidth="100vw" minHeight="100vh" alignItems="center" justifyContent="center" flexDirection="column">
+        <Spinner color="red.500"/>
+        <Text>Loading..</Text>
+      </Flex> : 
+      <Flex alignItems="center" justifyContent="center" flexDirection="column">
+        <Text fontSize="3xl" fontWeight="bold" my="5">過去１週間のいいねランキング</Text>
+        {item.map((item, index) => (
+          <Card
+            key={index}
+            direction={{ base: 'column', sm: 'row' }}
+            overflow='hidden'
+            variant='outline'
+            shadow='lg'
+            width='100%'
+            maxWidth='900px'
+            my={5}
+            transition="transform 0.2s ease-in-out"
+            _hover={{transform: "translateY(-5px)"}}
+          >
+            {index === 0 && (
             <Image
-              src="/images/2nd.png"
+              src="/images/1st.png"
               position="absolute"
               top="2"
               right="2"
             />
-          )}
-          {index === 2 && (
+            )}
+            {index === 1 && (
+              <Image
+                src="/images/2nd.png"
+                position="absolute"
+                top="2"
+                right="2"
+              />
+            )}
+            {index === 2 && (
+              <Image
+                src="/images/3nd.png"
+                position="absolute"
+                top="2"
+                right="2"
+              />
+            )}
             <Image
-              src="/images/3nd.png"
-              position="absolute"
-              top="2"
-              right="2"
-            />
-          )}
-          <Image
-            objectFit='cover'
-            maxW={{ base: '100%', sm: '200px' }}
-            src={item.img}
-          /> 
-          <Stack>
-            <CardBody>
-              <Heading size='md'>{item.name}</Heading>
-              <Text py='2'>
-                累計いいね数:{item.likes}
-              </Text>
-              <Text py='2'>
-                ショップ名:{item.shop_name}
-              </Text>
-              <Text py='2'>
-                アイテムURL:<Link href={item.url}>{item.url}</Link>
-              </Text>
-            </CardBody>
-          </Stack>
-        </Card>
-      ))}
-      <Text fontSize="3xl" fontWeight="bold" my="5">過去8日分の出品数チャート</Text>
-      <Box width="100%" height="450px" maxWidth="900px" position="relative" border="1px" borderColor="gray.200" shadow="lg" rounded="lg" my={5}>
-        <Bar options={options} data={chart}/>
-      </Box>
-    </Flex>
+              objectFit='cover'
+              maxW={{ base: '100%', sm: '200px' }}
+              src={item.img}
+            /> 
+            <Stack>
+              <CardBody>
+                <Heading size='md'>{item.name}</Heading>
+                <Text py='2'>
+                  累計いいね数:{item.likes}
+                </Text>
+                <Text py='2'>
+                  ショップ名:{item.shop_name}
+                </Text>
+                <Text py='2'>
+                  アイテムURL:<Link href={item.url}>{item.url}</Link>
+                </Text>
+              </CardBody>
+            </Stack>
+          </Card>
+        ))}
+        <Text fontSize="3xl" fontWeight="bold" my="5">過去8日分の出品数チャート</Text>
+        <Box width="100%" height="450px" maxWidth="900px" position="relative" border="1px" borderColor="gray.200" shadow="lg" rounded="lg" my={5}>
+          <Bar options={options} data={chart}/>
+        </Box>
+      </Flex>
+      }
+    </>
   );
 }

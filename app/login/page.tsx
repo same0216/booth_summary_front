@@ -26,10 +26,9 @@ export default function Login() {
   const cookies = parseCookies();
 
   useEffect(()=> {
-    console.log(cookies);
-    if (cookies.auth === "true") {
+    if (Object.keys(cookies).length !== 0) {
       return route.push('/dashboard');
-    }
+    } 
   },[]);
 
   const onsubmit: SubmitHandler<FieldValues> = async (data) => {
