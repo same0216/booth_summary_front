@@ -26,7 +26,7 @@ export default function Login() {
   const cookies = parseCookies();
 
   useEffect(()=> {
-    if (Object.keys(cookies).length !== 0) {
+    if (cookies.auth !== "false") {
       return route.push('/dashboard');
     } 
   },[]);

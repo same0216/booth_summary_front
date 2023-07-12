@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { parseCookies, destroyCookie } from "nookies";
+import { parseCookies, setCookie } from "nookies";
 import { Flex, Card, CardBody, Heading, Text, Image, Stack, useToast, Link, Box, Spinner} from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { Bar } from 'react-chartjs-2';
@@ -79,6 +79,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (Object.keys(cookies).length === 0) {
+      setCookie(null, "auth", "false")
       return route.push('/login');
     } 
     const fetchData = async () => {
@@ -97,7 +98,6 @@ export default function Dashboard() {
         setChart(chart.data);
         setLoading(false);
       } catch (error) {
-        destroyCookie(null, "token")
         route.push("/login");
         toast({
           title: "セッションが切れています、再度ログインしてください",
