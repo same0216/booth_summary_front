@@ -53,6 +53,7 @@ export default function Dashboard() {
   const data1:number[] = [];
 
   const options: ChartOptions = {
+    maintainAspectRatio: false,
     responsive: true,
     plugins: {
       legend: {
