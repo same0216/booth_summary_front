@@ -16,6 +16,7 @@ import {
   Legend,
   ChartOptions
 } from "chart.js";
+import Header from "../../components/header";
 
 interface Item {
   img: string;
@@ -29,8 +30,6 @@ interface ChartItem {
   date: string,
   count: number,
 }
-
-
 
 ChartJS.register(
   CategoryScale,
@@ -114,12 +113,13 @@ export default function Dashboard() {
 
   return(
     <>
+      <Header login={true}/>
       {loading ? 
-      <Flex minWidth="100vw" minHeight="100vh" alignItems="center" justifyContent="center" flexDirection="column">
+      <Flex minWidth="100vw" minHeight="100vh" alignItems="center" justifyContent="center" flexDirection="column" background="blackAlpha.200">
         <Spinner color="red.500"/>
         <Text>Loading..</Text>
       </Flex> : 
-      <Flex alignItems="center" justifyContent="center" flexDirection="column">
+      <Flex mt="12" alignItems="center" justifyContent="center" flexDirection="column" background="blackAlpha.300">
         <Text fontSize="3xl" fontWeight="bold" my="5">過去１週間のいいねランキング</Text>
         {item.map((item, index) => (
           <Card
@@ -134,6 +134,7 @@ export default function Dashboard() {
             transition="transform 0.2s ease-in-out"
             _hover={{transform: "translateY(-5px)"}}
           >
+            {/* <Link href={"/items/" + item.url.split("/").pop()} position="absolute" width="100%" height="100%" cursor="pointer" zIndex="1"></Link> */}
             {index === 0 && (
             <Image
               src="/images/1st.png"
@@ -173,14 +174,14 @@ export default function Dashboard() {
                   ショップ名:{item.shop_name}
                 </Text>
                 <Text py='2'>
-                  アイテムURL:<Link href={item.url}>{item.url}</Link>
+                  アイテムURL:<Link href={item.url} position="relative" zIndex="2">{item.url}</Link>
                 </Text>
               </CardBody>
             </Stack>
           </Card>
         ))}
         <Text fontSize="3xl" fontWeight="bold" my="5">過去8日分の出品数チャート</Text>
-        <Box width="100%" height="450px" maxWidth="900px" position="relative" border="1px" borderColor="gray.200" shadow="lg" rounded="lg" my={5}>
+        <Box width="100%" height="450px" maxWidth="900px" position="relative" border="1px" borderColor="gray.200" background="white" shadow="lg" rounded="lg" my={5}>
           <Bar options={options} data={chart}/>
         </Box>
       </Flex>
