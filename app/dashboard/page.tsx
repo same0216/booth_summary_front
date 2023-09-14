@@ -6,6 +6,9 @@ import { parseCookies, setCookie } from "nookies";
 import { Flex, Card, CardBody, Heading, Text, Image, Stack, useToast, Link, Box, Spinner} from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { Bar } from 'react-chartjs-2';
+import Header from "../../components/header";
+
+// Chart.jsコンポーネント
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,8 +19,8 @@ import {
   Legend,
   ChartOptions
 } from "chart.js";
-import Header from "../../components/header";
 
+// 型定義
 interface Item {
   img: string;
   name: string;
@@ -49,21 +52,18 @@ export default function Dashboard() {
   const [charts, setChart] = useState([]);
   const [loading, setLoading] = useState(true);
   const labels:string[] = [];
-  const data1:number[] = [];
+  const itemCnt:number[] = [];
 
+// Chart.jsオプション定義
   const options: ChartOptions = {
     maintainAspectRatio: false,
     responsive: true,
-    plugins: {
-      legend: {
-        position: "top"
-      },
-    }
   };
 
+// Chart.jsデータ挿入
   charts.forEach((item: ChartItem) => {
     labels.push(item.date);
-    data1.push(item.count);
+    itemCnt.push(item.count);
   })
 
   const chart = {
@@ -71,24 +71,26 @@ export default function Dashboard() {
     datasets: [
       {
         label: "出品数",
-        data: data1,
+        data: itemCnt,
         backgroundColor: "rgba(0, 133, 100, 0.5)"
       }
     ]
   };
 
   useEffect(() => {
+
+    // ログイン確認
     if (Object.keys(cookies).length === 0) {
       return route.push('/login');
     } 
     const fetchData = async () => {
       try {
-        const itemList = await axios.get("https://api.5573.me/booth/getTopItems?limit=10", {
+        const itemList = await axios.get(process.env.API_ORIGIN + "booth/getTopItems?limit=10", {
           headers: {
             authorization: token
           }
         });
-        const chart = await axios.get("https://api.5573.me/booth/getWeekSummary", {
+        const chart = await axios.get(process.env.API_ORIGIN + "booth/getWeekSummary", {
           headers: {
             authorization: token
           }

@@ -8,34 +8,35 @@ import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Header from "@/components/header";
 
-
 type formInputs = {
   user: string;
   password: string;
 }
 
 export default function Login() {
+  const route = useRouter();
+  const toast = useToast();
+  const cookies = parseCookies();
+
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting }
   } = useForm<formInputs>()
 
-  const route = useRouter();
-  const toast = useToast();
-  const cookies = parseCookies();
-
+  // ログイン済の場合TOP画面に遷移
   useEffect(()=> {
     if (cookies.auth !== "false" && Object.keys(cookies).length !== 0) {
       return route.push('/dashboard');
     } 
   },[]);
 
+  // ログイン処理
   const onsubmit: SubmitHandler<FieldValues> = async (data) => {
 
     await axios({
       method: "post",
-      url: "https://api.5573.me/users/login",
+      url: process.env.API_ORIGIN + "users/login",
       data: {username: data.user, password: data.password}
     })
 

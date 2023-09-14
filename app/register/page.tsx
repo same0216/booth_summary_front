@@ -5,7 +5,6 @@ import { Flex, Heading, Input, Button, Center, FormControl, FormErrorMessage, us
 import { useForm,  SubmitHandler, FieldValues  } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Header from "@/components/header";
-import Head from "next/head";
 
 type formInputs = {
   user: string;
@@ -13,19 +12,20 @@ type formInputs = {
 }
 
 export default function Register() {
+  const route = useRouter();
+  const toast = useToast();
+
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting }
   } = useForm<formInputs>()
 
-  const route = useRouter();
-  const toast = useToast();
-
+  // 新規登録処理
   const onsubmit: SubmitHandler<FieldValues> = async (data) => {
     await axios({
       method: "post",
-      url: "https://api.5573.me/users/register",
+      url: process.env.API_ORIGIN + "users/register",
       data: {username: data.user, password: data.password}
     })
 
