@@ -14,13 +14,11 @@ type formInputs = {
 export default function Register() {
   const route = useRouter();
   const toast = useToast();
-
   const {
     handleSubmit,
     register,
     formState: { errors, isSubmitting }
   } = useForm<formInputs>()
-
   // 新規登録処理
   const onsubmit: SubmitHandler<FieldValues> = async (data) => {
     await axios({

@@ -17,7 +17,6 @@ export default function Login() {
   const route = useRouter();
   const toast = useToast();
   const cookies = parseCookies();
-
   const {
     handleSubmit,
     register,
@@ -33,13 +32,11 @@ export default function Login() {
 
   // ログイン処理
   const onsubmit: SubmitHandler<FieldValues> = async (data) => {
-
     await axios({
       method: "post",
       url: process.env.API_ORIGIN + "users/login",
       data: {username: data.user, password: data.password}
     })
-
     .then((result => {
       setCookie(null, "token", result.data.token, {
         maxAge: 30 * 24 * 60 * 60,
@@ -52,7 +49,6 @@ export default function Login() {
 
       route.push('/dashboard');
     }))
-    
     .catch(() => {
        route.push('/login');
        toast({

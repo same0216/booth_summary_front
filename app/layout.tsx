@@ -3,7 +3,7 @@ import { Providers } from '../components/providers'
 
 export const metadata: Metadata = {
   title: 'booth-summary-front',
-  description: 'made by same & stub',
+  description: 'BoothのVRchatアイテムに特化した分析サイト',
 }
 
 export default function RootLayout({
