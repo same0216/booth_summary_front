@@ -1,13 +1,16 @@
 
 import { Flex, Button, Link, Box, useToast } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { destroyCookie } from "nookies";
+import { destroyCookie, setCookie } from "nookies";
 
 export default function Header({login = false}: {login?: boolean}){
   const route = useRouter();
   const toast = useToast()
   const logout = () => {
-    destroyCookie(null, "auth");
+    setCookie(null, "logged_in", "false", {
+      maxAge: 30 * 24 * 60 * 60,
+      path: '/',
+    })
     destroyCookie(null, "token");
     route.push("./login");
     toast({

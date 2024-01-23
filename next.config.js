@@ -12,7 +12,6 @@ const nextConfig = {
   env: {
     API_ORIGIN: "https://api.5573.me/"
   },
-  optimizeFonts: true
 }
 
 module.exports = nextConfig

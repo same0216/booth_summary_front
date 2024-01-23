@@ -77,9 +77,11 @@ export default function Page({ params }: { params: { id: string } }) {
   // };
 
   useEffect(() => {
-    if (Object.keys(cookies).length === 0) {
+    // ログイン確認
+    if (!cookies.logged_in || cookies.logged_in !== "true") {
       return route.push('/login');
     }
+
     const fetchData = async () => {
       try {
         const itemInfo = await axios.get(process.env.API_ORIGIN +`booth/getOne?data_product_id=${params.id}`,{
@@ -98,10 +100,10 @@ export default function Page({ params }: { params: { id: string } }) {
         console.log(itemLogs.data)
       } catch (error) {
         setCookie(null, "auth", "false");
-        route.push("/login");
+        route.push("/dashboard");
         toast({
-          title: "セッションが切れています、再度ログインしてください",
-          status: "error",
+          title: "アイテムのデータが存在しません。",
+          status: "warning",
           isClosable: true,
           position: "top-right"
         });
@@ -117,7 +119,7 @@ export default function Page({ params }: { params: { id: string } }) {
         <Spinner color="red.500"/>
         <Text>Loading..</Text>
       </Flex> :
-      <Flex alignItems="center" flexDirection="column" minHeight="100vh" background="blackAlpha.300">
+      <Flex alignItems="center" flexDirection="column" minHeight="100vh" background="blackAlpha.200">
         <Card
             direction={{ base: 'column', sm: 'row' }}
             overflow='hidden'
@@ -141,7 +143,7 @@ export default function Page({ params }: { params: { id: string } }) {
                 </Flex>
                 <Flex py="2" alignItems="center">
                   <LinkIcon/>
-                  <Link px='2' href={getOneItemInfo.url} position="relative" zIndex="2">{getOneItemInfo.url}</Link>
+                  <Link px='2' background="gray.50" rounded="md" href={getOneItemInfo.url} position="relative" zIndex="2">{getOneItemInfo.url}</Link>
                 </Flex>
               </CardBody>
             </Stack>

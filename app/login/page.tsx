@@ -7,6 +7,7 @@ import { useForm, SubmitHandler, FieldValues } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import Header from "@/components/header";
+import { off } from "process";
 
 type formInputs = {
   user: string;
@@ -25,9 +26,9 @@ export default function Login() {
 
   // ログイン済の場合TOP画面に遷移
   useEffect(()=> {
-    if (cookies.auth !== "false" && Object.keys(cookies).length !== 0) {
+    if (cookies.logged_in && cookies.logged_in !== "false") {
       return route.push('/dashboard');
-    } 
+    }
   },[]);
 
   // ログイン処理
@@ -38,25 +39,27 @@ export default function Login() {
       data: {username: data.user, password: data.password}
     })
     .then((result => {
-      setCookie(null, "token", result.data.token, {
+      setCookie(null, "logged_in", "true", {
         maxAge: 30 * 24 * 60 * 60,
         path: '/',
       })
-      setCookie(null, "auth", "true", {
+      setCookie(null, "token", result.data.token, {
         maxAge: 30 * 24 * 60 * 60,
         path: '/',
       })
 
       route.push('/dashboard');
     }))
-    .catch(() => {
-       route.push('/login');
-       toast({
-        title: "ユーザーIDまたはパスワードが間違っています。",
-        status: "error",
-        isClosable: true,
-        position: "top-right"
-       })
+    .catch((error) => {
+      if (error.response.status === 400) {
+        toast({
+          title: "ユーザーIDまたはパスワードが間違っているかメールアドレスが認証されていません。",
+          status: "error",
+          isClosable: true,
+          position: "top-right"
+         })
+      }
+
     })
   } 
 
@@ -102,7 +105,7 @@ export default function Login() {
               </Center>
             </form>
         </Flex>
-        <Text>新規登録は<Link color="blue" href="./register">こちら</Link>から</Text>
+        <Text mt={5}>新規登録は<Link color="blue" href="./register">こちら</Link>から</Text>
       </Flex>
     </>
   );

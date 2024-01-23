@@ -16,7 +16,6 @@ import {
   Title,
   Tooltip,
   Legend,
-  ChartOptions
 } from "chart.js";
 
 ChartJS.register(
@@ -54,7 +53,7 @@ export default function Dashboard() {
   const token = cookies.token;
   
 // Chart.jsオプション定義
-  const chatrOption: ChartOptions = {
+  const chatrOption = {
     maintainAspectRatio: false,
     responsive: true,
   };
@@ -78,9 +77,10 @@ export default function Dashboard() {
 
   useEffect(() => {
     // ログイン確認
-    if (Object.keys(cookies).length === 0) {
+    if (!cookies.logged_in || cookies.logged_in !== "true") {
       return route.push('/login');
     } 
+
     const fetchData = async () => {
       try {
         const itemList = await axios.get(process.env.API_ORIGIN + "booth/getTopItems", {
@@ -93,11 +93,12 @@ export default function Dashboard() {
             authorization: token
           }
         });
+
         setItem(itemList.data);
         setChart(weekSummary.data);
         setLoading(false);
       } catch (error) {
-        setCookie(null, "auth", "false");
+        setCookie(null, "logged_in", "false");
         route.push("/login");
         toast({
           title: "セッションが切れています、再度ログインしてください",
@@ -118,7 +119,7 @@ export default function Dashboard() {
         <Spinner color="red.500"/>
         <Text>Loading..</Text>
       </Flex> : 
-      <Flex mt="12" alignItems="center" justifyContent="center" flexDirection="column" background="blackAlpha.300">
+      <Flex mt="12" alignItems="center" justifyContent="center" flexDirection="column" background="blackAlpha.200">
         <Text fontSize="3xl" fontWeight="bold" my="5">過去１週間のランキング</Text>
         {topItemList.map((item, index) => (
             <Card
@@ -134,29 +135,13 @@ export default function Dashboard() {
               _hover={{transform: "translateY(-5px)"}}
             >
               <Link href={"/items/" + item.url.split("/").pop()} position="absolute" width="100%" height="100%" cursor="pointer" zIndex="1"></Link>
-              {index === 0 && (
+              {index <= 2 && (
               <Image
-                src="/images/1st.png"
+                src={index === 0 ? "/images/1st.png" : index === 1 ? "/images/2nd.png" : "/images/3rd.png"}
                 position="absolute"
                 top="2"
                 right="2"
               />
-              )}
-              {index === 1 && (
-                <Image
-                  src="/images/2nd.png"
-                  position="absolute"
-                  top="2"
-                  right="2"
-                />
-              )}
-              {index === 2 && (
-                <Image
-                  src="/images/3nd.png"
-                  position="absolute"
-                  top="2"
-                  right="2"
-                />
               )}
               <Image
                 objectFit='cover'
@@ -176,7 +161,7 @@ export default function Dashboard() {
                   </Flex>
                   <Flex py="2" alignItems="center">
                     <LinkIcon/>
-                    <Link px='2' href={item.url} position="relative" zIndex="2">{item.url}</Link>
+                    <Link px='2' background="gray.50" rounded="md" href={item.url} position="relative" zIndex="2">{item.url}</Link>
                   </Flex>
                 </CardBody>
               </Stack>
