@@ -4,7 +4,7 @@ import { Analytics } from '@vercel/analytics/react';
 
 export const metadata: Metadata = {
   title: 'booth-summary-front',
-  description: 'BoothのVRchatアイテムに特化した分析サイト',
+  description: 'BoothのVRchatアイテムに特化した情報サイト',
 }
 
 export default function RootLayout({
