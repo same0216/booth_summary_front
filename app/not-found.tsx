@@ -1,6 +1,5 @@
 "use client"
 
-import { useRouter } from "next/router";
 import { Box, Flex, Link, Image } from "@chakra-ui/react";
 import Header from "@/components/header"
 
